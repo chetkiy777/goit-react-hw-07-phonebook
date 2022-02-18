@@ -4,8 +4,8 @@ import shortid from 'shortid';
 import PropTypes from 'prop-types';
 
 export const ContactForm = props => {
-  const [name, changeName] = useState('');
-  const [number, changeNumber] = useState('');
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
   const [isDisabled, toggleDisbled] = useState(false);
 
   useEffect(() => {
@@ -22,16 +22,16 @@ export const ContactForm = props => {
   }, [name, number]);
 
   const resetForm = () => {
-    changeName('');
-    changeNumber('');
+    setName('');
+    setNumber('');
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     const contact = {
       id: shortid.generate(),
-      name: name,
-      number: number,
+      name,
+      number,
     };
 
     props.addContact(contact);
@@ -49,7 +49,7 @@ export const ContactForm = props => {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           value={name}
-          onChange={e => changeName(e.currentTarget.value)}
+          onChange={e => setName(e.currentTarget.value)}
         />
       </label>
       <label>
@@ -61,7 +61,7 @@ export const ContactForm = props => {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           value={number}
-          onChange={e => changeNumber(e.currentTarget.value)}
+          onChange={e => setNumber(e.currentTarget.value)}
         />
       </label>
 

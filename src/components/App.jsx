@@ -1,71 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Contacts from './Contacts/Contacts';
 import styles from './styles.module.css';
 import { Filter } from './Filter/Filter';
 
 import { ContactForm } from './ContactForm/ContactForm';
 
-export class App extends React.Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+export const App = () => {
+  let [contacts, setContacts] = useState([]);
+  let [filter, setFilter] = useState('');
 
-  componentDidMount() {
+  useEffect(() => {
     const data = localStorage.getItem('contacts');
     const parsedData = JSON.parse(data);
     if (parsedData) {
-      this.setState({ contacts: parsedData });
+      setContacts(parsedData);
     }
-  }
+  }, []);
 
-  addContact = contact => {
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, contact],
-    }));
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  const addContacts = contact => {
+    setContacts([...contacts, contact]);
   };
 
-  onInput = e => {
-    this.setState({ filter: e.currentTarget.value });
+  const onFilterInput = value => {
+    setFilter(value);
   };
 
-  filtered = () => {
-    return [...this.state.contacts].filter(contact =>
-      contact.name.toLowerCase().includes(this.state.filter.toLocaleLowerCase())
+  const filterContact = () => {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLocaleLowerCase())
     );
   };
 
-  deleteItem = e => {
+  const deleteItem = e => {
     const elemToRemove = e.currentTarget.parentNode.id;
-    this.setState({
-      contacts: this.state.contacts.filter(item => item.id !== elemToRemove),
-    });
+    setContacts(contacts.filter(item => item.id !== elemToRemove));
   };
 
-  componentDidUpdate(prevState, prevProps) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
+  return (
+    <div className={styles.wrapper}>
+      <h1>Phonebook</h1>
+      <ContactForm addContact={addContacts} contacts={contacts} />
 
-  render() {
-    return (
-      <div className={styles.wrapper}>
-        <h1>Phonebook</h1>
-        <ContactForm
-          addContact={this.addContact}
-          contacts={this.state.contacts}
-        />
-
-        <h1>Contacts</h1>
-        <Filter onInput={this.onInput} />
-        <Contacts
-          contacts={this.state.contacts}
-          filter={this.state.filter}
-          filtered={this.filtered}
-          deleteItem={this.deleteItem}
-        />
-      </div>
-    );
-  }
-}
+      <h1>Contacts</h1>
+      <Filter onFilterInput={onFilterInput} />
+      <Contacts
+        contacts={contacts}
+        filter={filter}
+        filtered={filterContact}
+        deleteItem={deleteItem}
+      />
+    </div>
+  );
+};

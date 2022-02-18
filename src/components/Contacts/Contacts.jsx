@@ -26,6 +26,7 @@ Contacts.propTypes = {
     })
   ),
   filtered: PropTypes.func,
+  deleteItem: PropTypes.func,
 };
 
 export default Contacts;
