@@ -1,106 +1,88 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 import shortid from 'shortid';
+import PropTypes from 'prop-types';
 
-export class ContactForm extends React.Component {
-  state = {
-    name: '',
-    number: '',
-    isDisabled: false,
-  };
+export const ContactForm = props => {
+  const [name, changeName] = useState('');
+  const [number, changeNumber] = useState('');
+  const [isDisabled, toggleDisbled] = useState(false);
 
-  // onNameChange = e => {
-  //   this.setState({ isDisabled: false });
-  //   this.setState({ name: e.currentTarget.value });
-  //   let name = e.currentTarget.value;
-  //   let finder = this.props.contacts.find(contact => contact.name === name);
-  //   if (finder) {
-  //     this.setState({ isDisabled: true });
-  //     alert('Такой уже есть');
-  //     this.setState({ name: '' });
-  //   }
-  // };
-
-  // onNumberChange = e => {
-  //   this.setState({ isDisabled: false });
-  //   this.setState({ number: e.currentTarget.value });
-  //   let number = e.currentTarget.value;
-  //   let finder = this.props.contacts.find(contact => contact.number === number);
-  //   if (finder) {
-  //     this.setState({ isDisabled: true });
-  //     alert('Такой уже есть');
-  //     this.setState({ number: '' });
-  //   }
-  // };
-
-  onInputChange = e => {
-    let { name, value } = e.currentTarget;
-    this.setState({ isDisabled: false });
-    this.setState({ [name]: value });
-    let finder = this.props.contacts.find(
+  useEffect(() => {
+    toggleDisbled(false);
+    let finder = props.contacts.find(
       contact =>
-        contact.name.toLowerCase() === value.toLowerCase() ||
-        contact.number === value
+        contact.name.toLowerCase() === name.toLowerCase() ||
+        contact.number === number
     );
     if (finder) {
-      this.setState({ isDisabled: true });
-      alert(`${value} is already in contacts.`);
-      this.setState({ [name]: '' });
+      toggleDisbled(true);
+      alert(`${name} is already in contacts.`);
     }
+  }, [name, number]);
+
+  const resetForm = () => {
+    changeName('');
+    changeNumber('');
   };
 
-  resetForm = () => {
-    this.setState({ name: '', number: '' });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
     const contact = {
       id: shortid.generate(),
-      name: this.state.name,
-      number: this.state.number,
+      name: name,
+      number: number,
     };
 
-    this.props.addContact(contact);
-    this.resetForm();
+    props.addContact(contact);
+    resetForm();
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} className={styles.form}>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            value={this.state.name}
-            onChange={e => this.onInputChange(e)}
-          />
-        </label>
-        <label>
-          Number:
-          <input
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            value={this.state.number}
-            onChange={e => this.onInputChange(e)}
-          />
-        </label>
+  return (
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label>
+        Name:
+        <input
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+          value={name}
+          onChange={e => changeName(e.currentTarget.value)}
+        />
+      </label>
+      <label>
+        Number:
+        <input
+          type="tel"
+          name="number"
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+          value={number}
+          onChange={e => changeNumber(e.currentTarget.value)}
+        />
+      </label>
 
-        <button
-          className={styles.submitButton}
-          type="submit"
-          disabled={this.state.isDisabled}
-        >
-          add contact
-        </button>
-      </form>
-    );
-  }
-}
+      <button
+        className={styles.submitButton}
+        type="submit"
+        disabled={isDisabled}
+      >
+        add contact
+      </button>
+    </form>
+  );
+};
+
+ContactForm.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+    })
+  ),
+  addContact: PropTypes.func,
+};
