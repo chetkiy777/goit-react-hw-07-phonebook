@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Contacts from './Contacts/Contacts';
 import styles from './styles.module.css';
 import { Filter } from './Filter/Filter';
-
 import { ContactForm } from './ContactForm/ContactForm';
 
 export const App = () => {

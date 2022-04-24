@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
-import styles from './styles.module.css';
 import { useEffect, useState } from 'react';
+import { FilteredBlock } from './Filter.styled';
 
 export const Filter = ({ onFilterInput }) => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
     onFilterInput(filter);
-  }, [filter]);
+  }, [filter, onFilterInput]);
 
   return (
     <div>
-      <p className={styles.text}>Find contacts by name</p>
+      <FilteredBlock>Find contacts by name</FilteredBlock>
       <input
         name="filter"
         value={filter}
