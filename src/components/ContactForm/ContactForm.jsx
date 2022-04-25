@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import styles from './styles.module.css';
 import shortid from 'shortid';
+import { ContactFormSubmitButton, AddContactForm } from './ContactForm.styled';
 import PropTypes from 'prop-types';
 
-export const ContactForm = props => {
+export const ContactForm = ({contacts, addContact}) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [isDisabled, toggleDisbled] = useState(false);
 
   useEffect(() => {
     toggleDisbled(false);
-    let finder = props.contacts.find(
+    let finder = contacts.find(
       contact =>
         contact.name.toLowerCase() === name.toLowerCase() ||
         contact.number === number
@@ -19,7 +19,7 @@ export const ContactForm = props => {
       toggleDisbled(true);
       alert(`${name} is already in contacts.`);
     }
-  }, [name, number]);
+  }, [name, number, contacts]);
 
   const resetForm = () => {
     setName('');
@@ -34,12 +34,12 @@ export const ContactForm = props => {
       number,
     };
 
-    props.addContact(contact);
+    addContact(contact);
     resetForm();
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <AddContactForm onSubmit={handleSubmit}>
       <label>
         Name:
         <input
@@ -65,14 +65,13 @@ export const ContactForm = props => {
         />
       </label>
 
-      <button
-        className={styles.submitButton}
+      <ContactFormSubmitButton
         type="submit"
         disabled={isDisabled}
       >
         add contact
-      </button>
-    </form>
+      </ContactFormSubmitButton>
+    </AddContactForm>
   );
 };
 

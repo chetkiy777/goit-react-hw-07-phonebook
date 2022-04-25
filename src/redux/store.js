@@ -15,9 +15,31 @@ const mySlice = createSlice({
 
 export const {incrementValue, decrementValue} = mySlice.actions;
 
+const contactsSlice = createSlice({
+    name: 'contacts',
+    initialState: [],
+    reducers: {
+        setContacts(state, action) {
+            return [...state, action.payload]
+        }
+    }
+})
+
+export const {setContacts} = contactsSlice.actions;
+
+
+
+const filterSlice = createSlice({
+    name: 'filter',
+    initialState: '',
+    reducers: {
+        
+    }
+})
 
 export const store = configureStore({
     reducer: {
-        myValue: mySlice.reducer
+        contacts: contactsSlice.reducer,
+        filter: filterSlice.reducer
     }
 })

@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import Contacts from './Contacts/Contacts';
-import styles from './styles.module.css';
+import { AppWrapper } from './App.styled';
 import { Filter } from './Filter/Filter';
 import { ContactForm } from './ContactForm/ContactForm';
+import {useDispatch, useSelector} from 'react-redux';
+import { setContacts } from 'redux/store';
 
 export const App = () => {
-  let [contacts, setContacts] = useState([]);
+  // let [contacts, setContacts] = useState([]);
+
+  const contacts = useSelector(state => state.contacts)
+  const dispatch = useDispatch();
+
+
   let [filter, setFilter] = useState('');
 
   useEffect(() => {
     const data = localStorage.getItem('contacts');
     const parsedData = JSON.parse(data);
     if (parsedData) {
-      setContacts(parsedData);
+      dispatch(() => setContacts(parsedData));
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -40,7 +47,7 @@ export const App = () => {
   };
 
   return (
-    <div className={styles.wrapper}>
+    <AppWrapper>
       <h1>Phonebook</h1>
       <ContactForm addContact={addContacts} contacts={contacts} />
 
@@ -52,6 +59,6 @@ export const App = () => {
         filtered={filterContact}
         deleteItem={deleteItem}
       />
-    </div>
+    </AppWrapper>
   );
 };
