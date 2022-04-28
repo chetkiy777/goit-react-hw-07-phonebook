@@ -4,7 +4,7 @@ import { AppWrapper } from './App.styled';
 import { Filter } from './Filter/Filter';
 import { ContactForm } from './ContactForm/ContactForm';
 import {useDispatch, useSelector} from 'react-redux';
-import { setContacts } from 'redux/store';
+import { delContact } from 'redux/store';
 
 export const App = () => {
   // let [contacts, setContacts] = useState([]);
@@ -15,20 +15,22 @@ export const App = () => {
 
   let [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    const data = localStorage.getItem('contacts');
-    const parsedData = JSON.parse(data);
-    if (parsedData) {
-      dispatch(() => setContacts(parsedData));
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const data = localStorage.getItem('contacts');
+  //   const parsedData = JSON.parse(data);
+  //   if (parsedData) {
+  //     dispatch(() => setContacts(parsedData));
+  //   }
+  // }, [dispatch]);
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
-  const addContacts = contact => {
-    setContacts([...contacts, contact]);
+
+  const deleteItem = e => {
+    const elemToRemove = e.currentTarget.parentNode.id;
+    dispatch(delContact(elemToRemove));
   };
 
   const onFilterInput = value => {
@@ -41,15 +43,12 @@ export const App = () => {
     );
   };
 
-  const deleteItem = e => {
-    const elemToRemove = e.currentTarget.parentNode.id;
-    setContacts(contacts.filter(item => item.id !== elemToRemove));
-  };
+  
 
   return (
     <AppWrapper>
       <h1>Phonebook</h1>
-      <ContactForm addContact={addContacts} contacts={contacts} />
+      <ContactForm  contacts={contacts} />
 
       <h1>Contacts</h1>
       <Filter onFilterInput={onFilterInput} />

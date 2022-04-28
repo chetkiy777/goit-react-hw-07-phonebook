@@ -1,4 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import shortid from "shortid";
 
 const mySlice = createSlice({
     name: 'myValue',
@@ -17,15 +18,30 @@ export const {incrementValue, decrementValue} = mySlice.actions;
 
 const contactsSlice = createSlice({
     name: 'contacts',
-    initialState: [],
+    initialState: [
+        {
+            "id": "1",
+            "name": "Anna",
+            "number": 1111111    
+        },
+        {
+            "id": "2",
+            "name": "Igor",
+            "number": 2222222    
+        },
+        
+    ],
     reducers: {
         setContacts(state, action) {
             return [...state, action.payload]
+        },
+        delContact(state, action) {
+            return state.filter(contact => contact.id !== action.payload)
         }
     }
 })
 
-export const {setContacts} = contactsSlice.actions;
+export const {setContacts, delContact} = contactsSlice.actions;
 
 
 

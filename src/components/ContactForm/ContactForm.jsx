@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import shortid from 'shortid';
 import { ContactFormSubmitButton, AddContactForm } from './ContactForm.styled';
 import PropTypes from 'prop-types';
+import {useDispatch} from 'react-redux'
+import { setContacts } from 'redux/store';
 
-export const ContactForm = ({contacts, addContact}) => {
+ 
+
+export const ContactForm = ({contacts}) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [isDisabled, toggleDisbled] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     toggleDisbled(false);
@@ -34,7 +39,8 @@ export const ContactForm = ({contacts, addContact}) => {
       number,
     };
 
-    addContact(contact);
+    dispatch(setContacts(contact));
+    console.log(contact)
     resetForm();
   };
 
@@ -79,7 +85,7 @@ ContactForm.propTypes = {
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
+      number: PropTypes.number.isRequired,
       id: PropTypes.string.isRequired,
     })
   ),
