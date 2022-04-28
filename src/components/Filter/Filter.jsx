@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 import { FilteredBlock } from './Filter.styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFilter } from 'redux/store';
 
-export const Filter = ({ onFilterInput }) => {
-  const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    onFilterInput(filter);
-  }, [filter, onFilterInput]);
+export const Filter = () => {
+  // const [filter, setFilter] = useState('');
+  const filter = useSelector(state => state.contacts.filter)
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -15,7 +15,7 @@ export const Filter = ({ onFilterInput }) => {
       <input
         name="filter"
         value={filter}
-        onChange={e => setFilter(e.currentTarget.value)}
+        onChange={(e) => dispatch(setFilter(e.currentTarget.value))}
       />
     </div>
   );

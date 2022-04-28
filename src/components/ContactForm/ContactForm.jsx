@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import shortid from 'shortid';
 import { ContactFormSubmitButton, AddContactForm } from './ContactForm.styled';
-import PropTypes from 'prop-types';
-import {useDispatch} from 'react-redux'
-import { setContacts } from 'redux/store';
+import {useDispatch, useSelector} from 'react-redux'
+import { addContacts } from 'redux/store';
 
- 
+export const ContactForm = () => {
 
-export const ContactForm = ({contacts}) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [isDisabled, toggleDisbled] = useState(false);
   const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.items)
 
   useEffect(() => {
     toggleDisbled(false);
@@ -39,8 +38,7 @@ export const ContactForm = ({contacts}) => {
       number,
     };
 
-    dispatch(setContacts(contact));
-    console.log(contact)
+    dispatch(addContacts(contact));
     resetForm();
   };
 
@@ -61,7 +59,7 @@ export const ContactForm = ({contacts}) => {
       <label>
         Number:
         <input
-          type="tel"
+          type="number"
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
@@ -81,13 +79,3 @@ export const ContactForm = ({contacts}) => {
   );
 };
 
-ContactForm.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.number.isRequired,
-      id: PropTypes.string.isRequired,
-    })
-  ),
-  addContact: PropTypes.func,
-};
