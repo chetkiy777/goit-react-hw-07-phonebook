@@ -14,14 +14,14 @@ export const ContactForm = () => {
 
   useEffect(() => {
     toggleDisbled(false);
-    let finder = contacts.find(
-      contact =>
-        contact.name.toLowerCase() === name.toLowerCase() ||
-        contact.number === number
-    );
-    if (finder) {
+    let findedName = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
+    let findedNumber = contacts.find(contact => contact.number === +number)
+
+    if (findedName) {
       toggleDisbled(true);
       alert(`${name} is already in contacts.`);
+    } else if (findedNumber) {
+      alert(`${number} is already in contacts.`);
     }
   }, [name, number, contacts]);
 

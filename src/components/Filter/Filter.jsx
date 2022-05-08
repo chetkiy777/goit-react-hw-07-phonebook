@@ -1,11 +1,8 @@
-import PropTypes from 'prop-types';
 import { FilteredBlock } from './Filter.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from 'redux/store';
 
-
 export const Filter = () => {
-  // const [filter, setFilter] = useState('');
   const filter = useSelector(state => state.contacts.filter)
   const dispatch = useDispatch()
 
@@ -19,8 +16,4 @@ export const Filter = () => {
       />
     </div>
   );
-};
-
-Filter.propTypes = {
-  onInput: PropTypes.func,
 };
