@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {ContactsList, ContactsItem} from './Contacts.styled';
 import { deleteContact } from 'redux/store';
+import { useGetContactsQuery } from 'redux/contactsApi';
 
 export const Contacts = () => {
+
+  const {data, isFetching} = useGetContactsQuery();
 
   const contacts = useSelector(state => state.contacts.items)
   const filter = useSelector(state => state.contacts.filter)

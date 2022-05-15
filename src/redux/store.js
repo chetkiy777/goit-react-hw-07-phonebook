@@ -1,6 +1,5 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { configureStore, createSlice, getDefaultMiddleware } from "@reduxjs/toolkit"
+import { contactsApi } from "./contactsApi"
 
 const contactsSlice = createSlice({
     name: 'contacts',
@@ -35,17 +34,13 @@ const contactsSlice = createSlice({
 
 export const {addContacts, deleteContact, setFilter} = contactsSlice.actions;
 
-const persistConfig = {
-  key: 'root',
-  storage,
-}
-
-const persistedContactsReducer = persistReducer(persistConfig, contactsSlice.reducer)
-
 export const store = configureStore({
     reducer: {
-        contacts: persistedContactsReducer
-    }
+        contacts: contactsSlice.reducer,
+        [contactsApi.reducerPath]: contactsApi.reducer,
+    },
+    middleware: getDefaultMiddleware => [
+        ...getDefaultMiddleware(),
+        contactsApi.middleware
+    ]
 })
-
-export const persistor = persistStore(store)
