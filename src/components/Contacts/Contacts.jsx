@@ -1,31 +1,29 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {ContactsList, ContactsItem} from './Contacts.styled';
-import { deleteContact } from 'redux/store';
-import { useGetContactsQuery } from 'redux/contactsApi';
+import {useGetContactsQuery, useDeleteContactMutation} from 'redux/contactsApi';
 
 export const Contacts = () => {
 
-  const {data, isFetching} = useGetContactsQuery();
+  const {data} = useGetContactsQuery();
+  const [deleteContact] = useDeleteContactMutation()
 
-  const contacts = useSelector(state => state.contacts.items)
   const filter = useSelector(state => state.contacts.filter)
-  const dispatch = useDispatch()
 
   const filtered = () => {
-    return contacts.filter(contact =>
+    return data.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLocaleLowerCase())
     )
   }; 
 
-  let rendered = filter === '' ? contacts : filtered();
+  let rendered = filter === '' ? data : filtered();
  
   return (
     <ContactsList>
-      {rendered.map(({ name, id, number }) => (
+      {data && rendered.map(({ name, id, phone }) => (
         <ContactsItem key={id} id={id}>
           <span>{name}: </span>
-          <span>{number}</span>
-          <button onClick={(e) => dispatch(deleteContact(e.currentTarget.parentNode.id))}>delete</button>
+          <span>{phone}</span>
+          <button onClick={() => deleteContact(id)}>delete</button>
         </ContactsItem>
       ))}
     </ContactsList>
