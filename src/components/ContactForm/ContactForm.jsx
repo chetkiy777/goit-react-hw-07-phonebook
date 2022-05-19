@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { ContactFormSubmitButton, AddContactForm } from './ContactForm.styled';
 import {useSelector} from 'react-redux'
-import { useCreateContactMutation } from 'redux/contactsApi';
+import { useCreateContactMutation, useGetContactsQuery } from 'redux/contactsApi';
 
 export const ContactForm = () => {
 
   const [createContact, result] = useCreateContactMutation();
+  const {data} = useGetContactsQuery();
 
   const [name, setName] = useState('');
   const [phone, setNumber] = useState('');
-  const [isDisabled, toggleDisbled] = useState(false);
+  const [isDisabled, toggleDisbled] = useState(true);
 
-  const contacts = useSelector(state => state.contacts.items)
-
-  // useEffect(() => {
-  //   toggleDisbled(false);
-  //   let findedName = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
-  //   let findedNumber = contacts.find(contact => contact.number === +phone)
-
-  //   if (findedName) {
-  //     toggleDisbled(true);
-  //     alert(`${name} is already in contacts.`);
-  //   } else if (findedNumber) {
-  //     alert(`${phone} is already in contacts.`);
-  //   }
-  // }, [name, phone, contacts]);
+  useEffect(() => {
+    if (name.length > 0 && phone.length > 0) {
+      toggleDisbled(false)
+    } else {
+      toggleDisbled(true)
+    }
+  }, [name, phone])
 
   const resetForm = () => {
     setName('');
@@ -37,6 +31,15 @@ export const ContactForm = () => {
       name,
       phone,
     };
+
+    let findedName = data.find(contact => contact.name.toLowerCase() === name.toLowerCase())
+    let findedNumber = data.find(contact => contact.phone === phone)
+
+    if (findedName) {
+      return alert(`${name} is already in contacts.`);
+    } else if (findedNumber) {
+      return alert(`${phone} is already in contacts.`);
+    }
 
     createContact(contact)
     resetForm();
