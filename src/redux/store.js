@@ -1,4 +1,4 @@
-import { configureStore, createSlice, getDefaultMiddleware } from "@reduxjs/toolkit"
+import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { contactsApi } from "./contactsApi"
 
 const contactsSlice = createSlice({
