@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import shortid from 'shortid';
 import { ContactFormSubmitButton, AddContactForm } from './ContactForm.styled';
-import {useDispatch, useSelector} from 'react-redux'
-import { addContacts } from 'redux/store';
+import {useSelector} from 'react-redux'
 import { useCreateContactMutation } from 'redux/contactsApi';
 
 export const ContactForm = () => {
 
+  const [createContact, result] = useCreateContactMutation();
+
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setNumber] = useState('');
   const [isDisabled, toggleDisbled] = useState(false);
-  const dispatch = useDispatch();
+
   const contacts = useSelector(state => state.contacts.items)
 
-  useEffect(() => {
-    toggleDisbled(false);
-    let findedName = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
-    let findedNumber = contacts.find(contact => contact.number === +number)
+  // useEffect(() => {
+  //   toggleDisbled(false);
+  //   let findedName = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
+  //   let findedNumber = contacts.find(contact => contact.number === +phone)
 
-    if (findedName) {
-      toggleDisbled(true);
-      alert(`${name} is already in contacts.`);
-    } else if (findedNumber) {
-      alert(`${number} is already in contacts.`);
-    }
-  }, [name, number, contacts]);
+  //   if (findedName) {
+  //     toggleDisbled(true);
+  //     alert(`${name} is already in contacts.`);
+  //   } else if (findedNumber) {
+  //     alert(`${phone} is already in contacts.`);
+  //   }
+  // }, [name, phone, contacts]);
 
   const resetForm = () => {
     setName('');
@@ -34,12 +34,11 @@ export const ContactForm = () => {
   const handleSubmit = e => {
     e.preventDefault();
     const contact = {
-      id: shortid.generate(),
       name,
-      number,
+      phone,
     };
 
-    dispatch(addContacts(contact));
+    createContact(contact)
     resetForm();
   };
 
@@ -61,11 +60,11 @@ export const ContactForm = () => {
         Number:
         <input
           type="number"
-          name="number"
+          name="phone"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={number}
+          value={phone}
           onChange={e => setNumber(e.currentTarget.value)}
         />
       </label>
