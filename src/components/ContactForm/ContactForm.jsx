@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ContactFormSubmitButton, AddContactForm } from './ContactForm.styled';
-import {useSelector} from 'react-redux'
 import { useCreateContactMutation, useGetContactsQuery } from 'redux/contactsApi';
 
 export const ContactForm = () => {
 
-  const [createContact, result] = useCreateContactMutation();
+  const [createContact] = useCreateContactMutation();
   const {data} = useGetContactsQuery();
 
   const [name, setName] = useState('');
