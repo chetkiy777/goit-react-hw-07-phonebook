@@ -33,7 +33,6 @@ export const ContactForm = () => {
 
     let findedName = data.find(contact => contact.name.toLowerCase() === name.toLowerCase())
     let findedNumber = data.find(contact => contact.phone === phone)
-
     if (findedName) {
       return alert(`${name} is already in contacts.`);
     } else if (findedNumber) {

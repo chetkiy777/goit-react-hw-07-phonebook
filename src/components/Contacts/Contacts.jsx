@@ -6,7 +6,6 @@ export const Contacts = () => {
 
   const {data} = useGetContactsQuery();
   const [deleteContact] = useDeleteContactMutation()
-
   const filter = useSelector(state => state.contacts.filter)
 
   const filtered = () => {
